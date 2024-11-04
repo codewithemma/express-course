@@ -1,43 +1,22 @@
 const express = require("express");
 const app = express();
-const { products } = require("./data");
-// app.get
-// app.post
-// app.delete
-// app.put
-// app.all
-// app.use
-// app.listen
 
-app.get("/", (req, res) => {
-  res.send(`<h1>home page</h1><a href="/api/products">
-    Products</a>`);
+// req => middleware => res
+
+const logger = (req, res) => {
+  const method = req.method;
+  const url = req.url;
+  const time = new Date().getFullYear();
+  next();
+  console.log(method, url, time);
+};
+
+app.get("/", logger, (req, res) => {
+  res.send("home page");
 });
 
-app.get("/api/products", (req, res) => {
-  const newProducts = products.map((product) => {
-    const { id, name, image } = product;
-    return { id, name, image };
-  });
-  res.send(newProducts);
-});
-
-app.get("/api/products/:id", (req, res) => {
-  const { id } = req.params;
-  const singleProduct = products.find((product) => product.id === Number(id));
-  if (!singleProduct) {
-    return res.status(404).send("product does not exist");
-  }
-  res.send(singleProduct);
-});
-
-app.get("/api/products/:id/reviews/:reviewId", (req, res) => {
-  console.log(req.params);
-  res.send("hello world");
-});
-
-app.all("*", (req, res) => {
-  res.status(404).send("<h1>404 not found</h1>");
+app.get("/about", (req, res) => {
+  res.send("about page");
 });
 
 app.listen(3000, () => {
